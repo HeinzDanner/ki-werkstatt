@@ -71,6 +71,11 @@ eigenen Grafikkarte. Den Code hat praktisch vollständig Claude Code geschrieben
 Entscheidungen, Prüfungen auf echter Hardware und Abnahmen liegen bei mir. Beide Projekte sind in Entwicklung, der
 Quellcode ist vorerst privat.
 
+## Thanks
+
+To **Kevin**, coach at [neue fische](https://www.neuefische.de), who led the AI day of my training course there and
+shared his `CLAUDE.md` template. It became the starting point for the rules Claude Code follows in both projects.
+
 ---
 
 © 2026 Heinz Danner. No licence has been chosen yet, so normal copyright applies.

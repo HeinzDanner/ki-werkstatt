@@ -47,7 +47,9 @@ hardware, acceptance of each stage, and Git.
 
 ## Rules Claude Code works under
 
-Each project has a `CLAUDE.md` file that Claude Code reads at the start of every session. The key rules:
+Each project has a `CLAUDE.md` file that Claude Code reads at the start of every session. Both started from the
+`CLAUDE.md` template that Kevin, a coach at neue fische, shared on the AI day of my training course. The key
+rules:
 
 - Plan first, wait for approval, one checkable step at a time.
 - No Git commands unless I ask for that specific task.

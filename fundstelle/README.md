@@ -33,17 +33,14 @@ The quotes are always shown, because they let the reader check every answer in s
 ## How a question is answered
 
 ```mermaid
-flowchart TD
-    PDF["PDF files"] -->|import, once| CH["Text per page, cut into chunks<br/>+ file-name header"]
-    CH --> DB[("SQLite FTS5 index")]
-    Q["Question"] --> QB["Query builder:<br/>stop words out, OR search"]
-    QB --> DB
-    DB -->|BM25 ranking| CTX["Best hits merged with their neighbours<br/>until the token budget is used"]
-    CTX --> LLM["qwen3:8b via Ollama<br/>JSON: quotes, answer, answerable"]
-    LLM --> CHK{"Every quote found in<br/>the passage it names?"}
-    CHK -->|yes| VER{"Second request:<br/>do the quotes support<br/>exactly what was asked?"}
-    CHK -->|no| NO["Declined, with a reason"]
-    VER -->|yes| ANS["Answer + file + page + stored quote"]
+flowchart LR
+    PDF["PDF files"] -->|import| IDX[("SQLite<br/>FTS5 index")]
+    Q["Question"] -->|search| IDX
+    IDX -->|best passages| LLM["qwen3:8b<br/>in Ollama"]
+    LLM --> CHK{"Quotes found<br/>in the text?"}
+    CHK -->|yes| VER{"Quotes answer<br/>the question?"}
+    CHK -->|no| NO["Declined,<br/>with a reason"]
+    VER -->|yes| ANS["Answer + file<br/>+ page + quote"]
     VER -->|no| NO
 ```
 

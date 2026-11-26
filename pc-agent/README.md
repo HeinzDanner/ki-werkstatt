@@ -35,15 +35,15 @@ code.
 ## Safety model
 
 ```mermaid
-flowchart TD
-    CMD["Command, typed or dictated"] --> LLM["Local model proposes one tool call"]
-    LLM --> V{"Parameters valid?<br/>Names taken from the command?"}
-    V -->|no| BACK["Ask back or refuse, with a reason"]
-    V -->|yes| POL{"Allowed by the policy?<br/>tool, folders, sites,<br/>programs, contacts"}
-    POL -->|no| BACK
-    POL -->|only reads| RUN["Carried out by the<br/>Windows, Linux or macOS adapter"]
-    POL -->|changes or sends| CONF["Confirmation written by the program:<br/>exactly what will happen"]
+flowchart LR
+    CMD["Command,<br/>typed or spoken"] --> LLM["Model proposes<br/>one tool call"]
+    LLM --> V{"Valid and from<br/>the command?"}
+    V -->|yes| POL{"Allowed by<br/>the policy?"}
+    POL -->|changes or sends| CONF["Confirmation<br/>written by the program"]
+    POL -->|only reads| RUN["Carried out by<br/>the OS adapter"]
     CONF -->|confirmed| RUN
+    V -->|no| BACK["Ask back<br/>or refuse"]
+    POL -->|no| BACK
     CONF -->|cancelled| BACK
     RUN --> LOG[("Audit log")]
     BACK --> LOG

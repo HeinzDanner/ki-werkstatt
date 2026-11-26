@@ -35,18 +35,21 @@ code.
 ## Safety model
 
 ```mermaid
-flowchart LR
-    CMD["Command,<br/>typed or spoken"] --> LLM["Model proposes<br/>one tool call"]
-    LLM --> V{"Valid and from<br/>the command?"}
-    V -->|yes| POL{"Allowed by<br/>the policy?"}
-    POL -->|changes or sends| CONF["Confirmation<br/>written by the program"]
-    POL -->|only reads| RUN["Carried out by<br/>the OS adapter"]
-    CONF -->|confirmed| RUN
-    V -->|no| BACK["Ask back<br/>or refuse"]
-    POL -->|no| BACK
-    CONF -->|cancelled| BACK
-    RUN --> LOG[("Audit log")]
-    BACK --> LOG
+flowchart TB
+    subgraph UNDERSTAND["1 · Understand and check"]
+        direction LR
+        CMD["Command,<br/>typed or spoken"] --> LLM["Model proposes<br/>one tool call"]
+        LLM --> CHECK{{"Checks in code:<br/>valid, from the command,<br/>allowed by the policy?"}}
+        CHECK -->|no| BACK["Ask back<br/>or refuse"]
+    end
+    subgraph ACT["2 · Act"]
+        direction LR
+        KIND{"Changes or<br/>sends something?"} -->|yes| CONF["Confirmation<br/>written by the program"]
+        KIND -->|only reads| RUN["Carried out by<br/>the OS adapter"]
+        CONF -->|confirmed| RUN
+        CONF -->|cancelled| STOP["Nothing happens"]
+    end
+    UNDERSTAND -->|checks passed| ACT
 ```
 
 Rules enforced in code, not in the prompt:

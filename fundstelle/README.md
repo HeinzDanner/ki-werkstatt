@@ -33,15 +33,22 @@ The quotes are always shown, because they let the reader check every answer in s
 ## How a question is answered
 
 ```mermaid
-flowchart LR
-    PDF["PDF files"] -->|import| IDX[("SQLite<br/>FTS5 index")]
-    Q["Question"] -->|search| IDX
-    IDX -->|best passages| LLM["qwen3:8b<br/>in Ollama"]
-    LLM --> CHK{"Quotes found<br/>in the text?"}
-    CHK -->|yes| VER{"Quotes answer<br/>the question?"}
-    CHK -->|no| NO["Declined,<br/>with a reason"]
-    VER -->|yes| ANS["Answer + file<br/>+ page + quote"]
-    VER -->|no| NO
+flowchart TB
+    subgraph FIND["1 · Find the passages"]
+        direction LR
+        PDF["PDF files"] -->|import| IDX[("SQLite FTS5<br/>index")]
+        Q["Question"] -->|BM25 search| IDX
+        IDX --> P["Best passages<br/>+ neighbours"]
+    end
+    subgraph ANSWER["2 · Answer and check"]
+        direction LR
+        LLM["qwen3:8b<br/>in Ollama"] --> CHK{"Quotes found<br/>in the text?"}
+        CHK -->|yes| VER{"Quotes answer<br/>the question?"}
+        VER -->|yes| ANS["Answer + file<br/>+ page + quote"]
+        CHK -->|no| NO["Declined,<br/>with a reason"]
+        VER -->|no| NO
+    end
+    FIND --> ANSWER
 ```
 
 1. **Import.** pypdf extracts the text page by page into SQLite. The text is cut into chunks of at most 1,200
